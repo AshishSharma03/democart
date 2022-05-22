@@ -1,15 +1,37 @@
 import React , {useContext} from 'react'
 import {Store} from '../utils/store'
 import Layout from  '../components/Layout'
+import dynamic from 'next/dynamic'
 import Link from '../src/Link'
 import Image from 'next/image'
 import  {Grid, Typography , TableContainer, Table, TableHead ,TableRow ,TableCell,TableBody,Card,List,ListItem,Button,MenuItem,Select} from '@mui/material'
+import axios from 'axios'
 
-export default function Carts() {
-   const { state } = useContext(Store)
+ function Carts() {
+   const { state, dispatch } = useContext(Store)
  const {
      cart: { cartItems} 
  } = state;
+
+  const updateCartHandler = async (item , quantity)=>{
+ 
+  const {data} = await axios.get(`/api/products/`)
+  const ss =  data.find(k => k._id === item._id ? k._id : '')
+  console.log(ss)
+
+     
+     if(data.countInStock <=0){
+    window.alert('Sorry. product is out of stock');
+    return;
+  }
+  dispatch({type: 'CART_ADD_ITEM',payload:{...item,quantity}});
+
+  }
+
+  const removeItemhandler = ( item ) => {
+   dispatch({type : 'CART_REMOVE_ITEM',payload : item});
+  }
+
 
 
   return (
@@ -32,6 +54,7 @@ export default function Carts() {
                     <TableCell align="right">Action</TableCell>
                   </TableRow>
                 </TableHead>
+
                 <TableBody>
                   {cartItems.map((item) => (
                     <TableRow key={item._id}>
@@ -56,7 +79,7 @@ export default function Carts() {
                     
                       </TableCell>
                       <TableCell align="right">
-                        <Select value={item.quantity}>
+                        <Select value={item.quantity} onChange={(e) => updateCartHandler(item , e.target.value)}>
                           {[...Array(item.countInStock).keys()].map((x) => (
                             <MenuItem key={x + 1} value={x + 1}>
                               {x + 1}
@@ -66,7 +89,7 @@ export default function Carts() {
                       </TableCell>
                       <TableCell align="right">${item.price}</TableCell>
                       <TableCell align="right">
-                        <Button variant="contained" color="secondary" >
+                        <Button variant="contained" color="secondary"  onClick={()=> removeItemhandler(item)}>
                           x
                         </Button>
                       </TableCell>
@@ -76,7 +99,7 @@ export default function Carts() {
               </Table>
             </TableContainer>
           </Grid>
-          <Grid md={3} xs={12}>
+          <Grid item md={3} xs={12}>
             <Card>
               <List>
                 <ListItem>
@@ -100,3 +123,8 @@ export default function Carts() {
     </Layout>
   )
 }
+
+
+export default dynamic(() =>
+  Promise.resolve(Carts), {ssr:false
+})

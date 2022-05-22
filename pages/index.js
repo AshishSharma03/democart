@@ -6,11 +6,30 @@ import data from '../utils/data';
 import Link from '../src/Link';
 import dbConnect from '../utils/db';
 import Product from '../model/Product';
-
+import axios from 'axios';
+import { useRouter } from 'next/router';
+import { useContext } from 'react';
+import { Store } from '../utils/store';
 
  function Index(props) {
-  const {products } = props
+   const router = useRouter();
+   const { state, dispatch } = useContext(Store);  
+   const {products } = props
 
+  const addToCartHandler = async (product)=>{
+ 
+    const {data} = await axios.get(`/api/products/`)
+    const ss =  data.find(k => k._id === product._id ? k._id : '')
+    console.log(ss)
+
+       
+       if(data.countInStock <=0){
+      window.alert('Sorry. product is out of stock');
+      return;
+    }
+    dispatch({type: 'CART_ADD_ITEM',payload:{...product,quantity: 1}});
+      // router.push('/carts')
+  }
   return (
     <div>
     <Layout>
@@ -42,7 +61,7 @@ import Product from '../model/Product';
                           <CardActions>
                             <Typography sx={{fontWeight:"bold",fontSize:"20px"}}>{product.price * 10}₹</Typography>
                           </CardActions>
-                          <Button>
+                          <Button onClick={()=> addToCartHandler(product)}>
                             Add to cart
                           </Button>
                         </Card>

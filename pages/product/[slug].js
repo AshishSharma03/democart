@@ -14,7 +14,7 @@ function ProductScreen(props) {
     
     const router = useRouter();
     // const {slug} = router.query;
-    const {dispatch} = useContext(Store)
+    const {state,dispatch} = useContext(Store)
     const {product} = props
 
     
@@ -24,13 +24,14 @@ function ProductScreen(props) {
     }
 
     const addToCartHandler = async ()=>{
- 
+      const existItem = state.cart.cartItems.find((x) => x._id === product._id)
+      const quantity = existItem ? existItem.quantity + 1 : 1 ;
       const {data} = await axios.get(`/api/products/`)
       const ss =  data.find(k => k._id === product._id ? k._id : '')
       console.log(ss)
  
          
-         if(data.countInStock <=0){
+         if(data.countInStock <=quantity){
         window.alert('Sorry. product is out of stock');
         return;
       }

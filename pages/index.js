@@ -20,7 +20,7 @@ import { Store } from '../utils/store';
  
     const {data} = await axios.get(`/api/products/`)
     const ss =  data.find(k => k._id === product._id ? k._id : '')
-    console.log(ss)
+    // console.log(ss)
 
        
        if(data.countInStock <=0){

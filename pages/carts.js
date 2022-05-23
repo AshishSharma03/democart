@@ -3,11 +3,13 @@ import {Store} from '../utils/store'
 import Layout from  '../components/Layout'
 import dynamic from 'next/dynamic'
 import Link from '../src/Link'
+import { useRouter } from 'next/router';
 import Image from 'next/image'
 import  {Grid, Typography , TableContainer, Table, TableHead ,TableRow ,TableCell,TableBody,Card,List,ListItem,Button,MenuItem,Select} from '@mui/material'
 import axios from 'axios'
 
  function Carts() {
+  const router = useRouter();
    const { state, dispatch } = useContext(Store)
  const {
      cart: { cartItems} 
@@ -17,14 +19,13 @@ import axios from 'axios'
  
   const {data} = await axios.get(`/api/products/`)
   const ss =  data.find(k => k._id === item._id ? k._id : '')
-  console.log(ss)
-
+  // console.log(ss)
      
      if(data.countInStock <=0){
     window.alert('Sorry. product is out of stock');
     return;
   }
-  dispatch({type: 'CART_ADD_ITEM',payload:{...item,quantity}});
+  dispatch({ type: "CART_ADD_ITEM", payload: { ...item, quantity } });
 
   }
 
@@ -32,6 +33,9 @@ import axios from 'axios'
    dispatch({type : 'CART_REMOVE_ITEM',payload : item});
   }
 
+  const checkoutHandler = () => {
+    router.push('/shipping');
+  };
 
 
   return (
@@ -110,7 +114,7 @@ import axios from 'axios'
                   </Typography>
                 </ListItem>
                 <ListItem>
-                  <Button variant="contained" color="primary" fullWidth>
+                  <Button variant="contained" color="primary" fullWidth onClick={checkoutHandler}>
                     Check Out
                   </Button>
                 </ListItem>

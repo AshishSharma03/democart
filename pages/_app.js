@@ -7,6 +7,7 @@ import { CacheProvider } from '@emotion/react';
 import theme from '../src/theme';
 import createEmotionCache from '../src/createEmotionCache';
 import { StoreProvider } from '../utils/store';
+import { SnackbarProvider } from 'notistack';
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -19,6 +20,7 @@ export default function MyApp(props) {
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
+    <SnackbarProvider  anchorOrigin={{vertical : 'top', horizontal : 'center'}}>
 
       <StoreProvider>
       <ThemeProvider theme={theme}>
@@ -28,6 +30,7 @@ export default function MyApp(props) {
         <Component {...pageProps} />
       </ThemeProvider>
         </StoreProvider>
+    </SnackbarProvider>
     </CacheProvider>
   );
 }

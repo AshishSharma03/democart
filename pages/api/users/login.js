@@ -8,9 +8,7 @@ import { signToken } from '../../../utils/auth';
 const handler = nc();
 handler.post(async (req, res)=>{
      await dbConnect();
-   
-   
-    
+
    
      const user = await User.findOne({
         email: req.body.email

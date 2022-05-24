@@ -24,6 +24,9 @@ handler.post(async (req, res) => {
     email: user.email,
     isAdmin: user.isAdmin,
   });
+
+  res.status(401).send({message: 'Invalid email or password'});
+   res.status(500).send({message:'Check your connection'})
 });
 
 export default handler;

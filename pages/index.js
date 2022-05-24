@@ -10,25 +10,37 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useContext } from 'react';
 import { Store } from '../utils/store';
-
+import { useSnackbar} from 'notistack';
  function Index(props) {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
    const router = useRouter();
    const { state, dispatch } = useContext(Store);  
    const {products } = props
+   const {cart} = state;
 
   const addToCartHandler = async (product)=>{
  
     const {data} = await axios.get(`/api/products/`)
-    const ss =  data.find(k => k._id === product._id ? k._id : '')
-    // console.log(ss)
+    // const ss =  data.find(k => k._id === product._id ? k._id : '')
 
        
        if(data.countInStock <=0){
       window.alert('Sorry. product is out of stock');
       return;
     }
+    // console.log(cart.length)
     dispatch({type: 'CART_ADD_ITEM',payload:{...product,quantity: 1}});
       // router.push('/carts')
+
+      enqueueSnackbar(
+         `${product.name} Add In your cart!`,
+         {
+            anchorOrigin: {
+        vertical: 'bottom',
+        horizontal: 'left',
+    }, 
+           preventDuplicate: true, }
+       )
   }
   return (
     <div>
@@ -59,7 +71,7 @@ import { Store } from '../utils/store';
                           </CardActionArea>
                           </Link>
                           <CardActions>
-                            <Typography sx={{fontWeight:"bold",fontSize:"20px"}}>{product.price * 10}₹</Typography>
+                            <Typography sx={{fontWeight:"bold",fontSize:"20px"}}>{product.price}₹</Typography>
                           </CardActions>
                           <Button onClick={()=> addToCartHandler(product)}>
                             Add to cart

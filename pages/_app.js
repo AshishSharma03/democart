@@ -20,7 +20,7 @@ export default function MyApp(props) {
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
-    <SnackbarProvider  anchorOrigin={{vertical : 'top', horizontal : 'center'}}>
+    <SnackbarProvider  anchorOrigin={{vertical : 'top', horizontal : 'center'}} maxSnack={1}>
 
       <StoreProvider>
       <ThemeProvider theme={theme}>

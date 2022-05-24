@@ -27,6 +27,7 @@ import axios from 'axios'
   }
   dispatch({ type: "CART_ADD_ITEM", payload: { ...item, quantity } });
 
+
   }
 
   const removeItemhandler = ( item ) => {
@@ -91,7 +92,7 @@ import axios from 'axios'
                           ))}
                         </Select>
                       </TableCell>
-                      <TableCell align="right">${item.price}</TableCell>
+                      <TableCell align="right">{item.price} rs/-</TableCell>
                       <TableCell align="right">
                         <Button variant="contained" color="secondary"  onClick={()=> removeItemhandler(item)}>
                           x
@@ -109,8 +110,8 @@ import axios from 'axios'
                 <ListItem>
                   <Typography variant="h6">
                     Subtotal ({cartItems.reduce((a, c) => a + c.quantity, 0)}{' '}
-                    items) : $
-                    {cartItems.reduce((a, c) => a + c.quantity * c.price, 0)}
+                    items) :
+                    {cartItems.reduce((a, c) => a + c.quantity * c.price, 0)} rs/-
                   </Typography>
                 </ListItem>
                 <ListItem>
